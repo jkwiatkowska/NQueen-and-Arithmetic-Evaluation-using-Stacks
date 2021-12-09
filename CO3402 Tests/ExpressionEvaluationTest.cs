@@ -6,6 +6,29 @@ namespace CO3402_Tests
     class ExpressionEvaluationTest
     {
         [Test]
+        [TestCase(null, false)]
+        [TestCase("", false)]
+        [TestCase("(", false)]
+        [TestCase(")", false)]
+        [TestCase("+", false)]
+        [TestCase("()", false)]
+        [TestCase("1/", false)]
+        [TestCase("*41", false)]
+        [TestCase("2++", false)]
+        [TestCase("1**4", false)]
+        [TestCase("1+4-)8^2(", false)]
+        [TestCase("1234", true)]
+        [TestCase("1+1     ", true)]
+        [TestCase(" 2 * 7-1", true)]
+        [TestCase("9^(7%2)", true)]
+        [TestCase("1*(8-(2+4))", true)]
+        public void ValidateExpressionTest(string expression, bool expectedResult)
+        {
+            bool result = ExpressionEvaluation.ValidateExpression(expression);
+            Assert.AreEqual(result, expectedResult);
+        }
+
+        [Test]
         [TestCase("2+2", "2 2 +")]
         [TestCase("102%2", "102 2 %")]
         [TestCase("2*3/(2-1)+5*3", "2 3 * 2 1 - / 5 3 * +")]

@@ -17,6 +17,64 @@ namespace CO3402_Assignment
             { ')', 4 }
         };
 
+        public static bool ValidateExpression(string expression)
+        {
+            if (String.IsNullOrEmpty(expression))
+            {
+                return false;
+            }
+
+            char first = ' ';
+            char last = ' ';
+
+            Stack<char> parentheses = new Stack<char>();
+            foreach (char c in expression)
+            {
+                if (c == '(')
+                {
+                    parentheses.push(c);
+                }
+                else if (c == ')')
+                {
+                    if (parentheses.pop() != '(')
+                    {
+                        return false;
+                    }
+                }
+                else
+                {
+                    if (Operators.ContainsKey(last) && Operators.ContainsKey(c))
+                    {
+                        return false;
+                    }
+                    if (first == ' ')
+                    {
+                        if (Operators.ContainsKey(c))
+                        {
+                            return false;
+                        }
+                        first = c;
+                    }
+                    if (c != ' ')
+                    {
+                        last = c;
+                    }
+                }
+            }
+
+            if (!parentheses.isEmpty())
+            {
+                return false;
+            }
+
+            if (last == ' ' || Operators.ContainsKey(last))
+            {
+                return false;
+            }
+
+            return true;
+        }
+
         public static string InfixToPostfix(string infix)
         {
             string output = "";
@@ -39,7 +97,7 @@ namespace CO3402_Assignment
                         // everything on the stack is popped and the parentheses are discarded.
                         while (operators.top() != '(')
                         {
-                            // Guard against an infinite loop.
+                            // This shouldn't happen if ValidateExpression() is used.
                             if (operators.isEmpty())
                             {
                                 return "Error: Incorrect number of parentheses.";
@@ -239,18 +297,25 @@ namespace CO3402_Assignment
 
             string infixExpression = Console.ReadLine();
 
-            Console.WriteLine("Postfix notation:");
-            Console.WriteLine(InfixToPostfix(infixExpression));
-
-            Console.WriteLine("Prefix notation:");
-            string prefix = InfixToPrefix(infixExpression);
-            Console.WriteLine(prefix);
-
-            // Only show evaluation result if the expression can be evaluated.
-            if (TryEvaluate(prefix, out float result))
+            if (ValidateExpression(infixExpression))
             {
-                Console.WriteLine("Evaluation result:");
-                Console.WriteLine(result);
+                Console.WriteLine("Postfix notation:");
+                Console.WriteLine(InfixToPostfix(infixExpression));
+
+                Console.WriteLine("Prefix notation:");
+                string prefix = InfixToPrefix(infixExpression);
+                Console.WriteLine(prefix);
+
+                // Only show evaluation result if the expression can be evaluated.
+                if (TryEvaluate(prefix, out float result))
+                {
+                    Console.WriteLine("Evaluation result:");
+                    Console.WriteLine(result);
+                }
+            }
+            else
+            {
+                Console.WriteLine("Invalid expression. Please try again.");
             }
         }
     }
