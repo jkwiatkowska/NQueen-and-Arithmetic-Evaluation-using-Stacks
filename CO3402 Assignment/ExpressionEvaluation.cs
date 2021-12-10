@@ -19,14 +19,17 @@ namespace CO3402_Assignment
 
         public static bool ValidateExpression(string expression)
         {
+            // Empty string
             if (String.IsNullOrEmpty(expression))
             {
                 return false;
             }
 
+            // Keep track of first and last operand or operator found
             char first = ' ';
             char last = ' ';
 
+            // Ensure each parenthesis is closed
             Stack<char> parentheses = new Stack<char>();
             foreach (char c in expression)
             {
@@ -43,18 +46,22 @@ namespace CO3402_Assignment
                 }
                 else
                 {
+                    // Two operators in a row are not allowed (not including parentheses)
                     if (Operators.ContainsKey(last) && Operators.ContainsKey(c))
                     {
                         return false;
                     }
+                    // If first hasn't been found yet
                     if (first == ' ')
                     {
+                        // Expression cannot start with an operator
                         if (Operators.ContainsKey(c))
                         {
                             return false;
                         }
                         first = c;
                     }
+                    // Keep track of the most recent 
                     if (c != ' ')
                     {
                         last = c;
@@ -62,11 +69,13 @@ namespace CO3402_Assignment
                 }
             }
 
+            // Unclosed parenthesis
             if (!parentheses.isEmpty())
             {
                 return false;
             }
 
+            // Expression cannot end with an operator or consist entirely of spaces
             if (last == ' ' || Operators.ContainsKey(last))
             {
                 return false;
