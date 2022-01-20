@@ -53,7 +53,6 @@ namespace CO3402_Tests
         }
 
         [Test]
-        [TestCase("2+2", 4.0f)]
         [TestCase("1-2", -1.0f)]
         [TestCase("10%3", 1.0f)]
         [TestCase("2^3", 8.0f)]
@@ -63,10 +62,10 @@ namespace CO3402_Tests
         [TestCase("1/10000", 0.0001f)]
         [TestCase("2*3/(2-1)+5*3", 21.0f)]
         [TestCase("2*10^2%(4-1)", 2.0f)]
+        [TestCase("2+2", 4.0f)]
         public void EvaluationTest(string infix, float expectedValue)
         {
-            float result;
-            ExpressionEvaluation.TryEvaluate(ExpressionEvaluation.InfixToPrefix(infix), out result);
+            ExpressionEvaluation.TryEvaluate(ExpressionEvaluation.InfixToPrefix(infix), out float result);
 
             Assert.AreEqual(expectedValue, result);
         }
